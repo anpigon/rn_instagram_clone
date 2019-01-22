@@ -7,7 +7,7 @@ export default class LikesTab extends Component{
 
 	static navigationOptions = {
 		tabBarIcon: ({ tintColor }) => (
-				< Icon name='ios-heart' style={{ color: tintColor }} />
+			<Icon name='ios-heart' style={{ color: tintColor }} />
 		)
 	}
 
