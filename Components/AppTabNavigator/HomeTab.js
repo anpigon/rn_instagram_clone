@@ -106,16 +106,21 @@ export default class HomeTab extends Component {
                                     paddingEnd: 5
                                 }}>
                                 {
-                                    this.state.followings.map(following => <Thumbnail 
-                                        style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
-                                        source={{uri: `https://steemitimages.com/u/${following}/avatar` }} />)
+                                    this.state.followings.map(following => (
+                                        <Thumbnail 
+                                            key={ following }
+                                            style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
+                                            source={{uri: `https://steemitimages.com/u/${following}/avatar` }} />
+                                    ))
                                 }
                             </ScrollView>
                         </View>
                     </View>
                     {/* 여기까지 스토리 헤더 끝 */}
                     {
-                        this.state.feeds.map(feed => <CardComponent data={ feed } key={ feed.url }/>)
+                        this.state.feeds.map(feed => (
+                            <CardComponent data={ feed } key={ feed.url }/>
+                        ))
                     }
                 </Content>
             </Container>

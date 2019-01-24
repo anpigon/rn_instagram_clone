@@ -1,9 +1,30 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import { Icon, Container, Content, Header, Left, Body, Right, Button } from 'native-base';
-import EntypoIcon from 'react-native-vector-icons/Entypo'
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
-export default class ProfileTab extends Component{
+import CardComponent from '../CardComponent';
+
+let images = [
+    "https://cdn.pixabay.com/photo/2018/11/29/21/19/hamburg-3846525__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/11/11/16/51/ibis-3809147__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/11/23/14/19/forest-3833973__480.jpg",
+    "https://cdn.pixabay.com/photo/2019/01/05/17/05/man-3915438__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/12/04/22/38/road-3856796__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/11/04/20/21/harley-davidson-3794909__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/12/25/21/45/crystal-ball-photography-3894871__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/12/29/23/49/rays-3902368__480.jpg",
+    "https://cdn.pixabay.com/photo/2017/05/05/16/57/buzzard-2287699__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/08/06/16/30/mushroom-3587888__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/12/15/02/53/flower-3876195__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/12/16/18/12/open-fire-3879031__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/11/24/02/05/lichterkette-3834926__480.jpg",
+    "https://cdn.pixabay.com/photo/2018/11/29/19/29/autumn-3846345__480.jpg"
+]
+
+const { width, height } = Dimensions.get('window');
+
+export default class ProfileTab extends Component {
 
 	static navigationOptions = {
 		tabBarIcon: ({ tintColor }) => (
@@ -11,13 +32,98 @@ export default class ProfileTab extends Component{
 		)
     }
 
-    state = {
-        name: '',
-        reputation: 0,
-        profile: {},
-        postCount: 0,
-        followingCount: 0,
-        followerCount: 0,
+    constructor(props){
+        super(props)
+ 
+        this.state = {
+            name: '',
+            reputation: 0,
+            profile: {},
+            postCount: 0,
+            followingCount: 0,
+            followerCount: 0,
+            activeIndex: 0,
+            blogs: []
+        };
+    }
+
+    segmentClicked = (index) => {
+        this.setState({
+            activeIndex: index
+        })
+    }
+
+    renderSectionOne = () => {
+        return images.map((image, index) => {
+            return (
+                <View key={index} style={{ width: width/3, height: width/3 }} >
+                    <Image source={{ url: image }} style={{ flex:1 }}/>
+                </View>
+            )
+        })
+    }
+
+    renderSectionTwo = () => {
+        return this.state.blogs.map(blog => (
+            <CardComponent data={ blog } key={ blog.url }/>
+        ));
+    }
+
+    renderSection = () => {
+        if(this.state.activeIndex === 0) {
+            return (
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    { this.renderSectionOne() }
+                </View>
+            )
+        }
+        else if(this.state.activeIndex === 1) {
+            return (
+                <View>
+                    { this.renderSectionTwo() }
+                </View>
+            )
+        }
+    }
+
+    fetchState(username) {
+        const data = {
+            id: 4,
+            jsonrpc: "2.0",
+            method: "call",
+            params: [
+              "database_api",
+              "get_state",
+              [`/@${username}`]
+            ]
+        };
+        return fetch('https://api.steemit.com',
+        {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => res.result)
+    }
+
+    fetchBlog(tag, limit=20, start_author='', start_permlink='') {
+        const data = {
+            id: 5,
+            jsonrpc: "2.0",
+            method: "call",
+            params: [
+              "database_api",
+              "get_discussions_by_blog",
+              [{ tag, limit, start_author, start_permlink }]
+            ]
+        }; // react-native-steemjs--1546529527678
+        return fetch('https://api.steemit.com',
+        {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => res.result)
     }
 
     fetchAccount(username) {
@@ -63,7 +169,27 @@ export default class ProfileTab extends Component{
     componentWillMount() {
         const username = 'anpigon';
 
-        this.fetchAccount(username).then(({name, post_count, reputation, json_metadata}) => {
+        this.fetchState(username).then(({
+            accounts,
+            content,
+            feed_price,
+            props,
+        }) => {
+            // feed_price: {base: "0.399 SBD", quote: "1.000 STEEM"}
+            // props: {time: "2019-01-24T14:53:33", sbd_print_rate: 10000, sbd_interest_rate: 0, head_block_number: 29738762, total_vesting_shares: "411678853570.303833 VESTS", …}
+            const { name, post_count, reputation, json_metadata, blog, net_vesting_shares, created } = accounts[username];
+            const { profile } = JSON.parse(json_metadata);
+            const log = Math.log(parseInt(String(reputation).substring(0, 4))) / Math.log(10);
+            this.setState({
+                name,
+                reputation: Math.max(((String(reputation).length - 1) + (log - parseInt(log))) - 9, 0) * 9 + 25,
+                postCount: post_count,
+                profile,
+                blogs: Object.values(content)
+            })
+        });
+
+        /*this.fetchAccount(username).then(({name, post_count, reputation, json_metadata}) => {
             const { profile } = JSON.parse(json_metadata);
             const log = Math.log(parseInt(reputation.substring(0, 4))) / Math.log(10);
             this.setState({
@@ -72,7 +198,7 @@ export default class ProfileTab extends Component{
                 postCount: post_count,
                 profile
             })
-        });
+        });*/
 
         this.fetchFollowCount(username).then(({following_count, follower_count}) => {
             this.setState({
@@ -137,6 +263,36 @@ export default class ProfileTab extends Component{
                         <Text>{profile.about}</Text>
                         <Text>{profile.website}</Text>
                     </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent:'space-around', borderTopWidth:1,borderTopColor:'#eae5e5' }}>
+                        <Button transparent
+                                onPress={() => this.segmentClicked(0)}
+                            active={this.state.activeIndex === 0}>
+                            <Icon name='ios-apps' 
+                                style={[ this.state.activeIndex === 0 ? {} : {color: 'grey'} ]}/>
+                        </Button>
+                        <Button transparent
+                                onPress={() => this.segmentClicked(1)}
+                            active={this.state.activeIndex === 1}>
+                            <Icon name='ios-list' 
+                                style={[ this.state.activeIndex === 1 ? {} : {color: 'grey'} ]}/>
+                        </Button>
+                        <Button transparent
+                                onPress={() => this.segmentClicked(2)}
+                            active={this.state.activeIndex === 2}>
+                            <Icon name='ios-people' 
+                                style={[ this.state.activeIndex === 2 ? {} : {color: 'grey'} ]}/>
+                        </Button>
+                        <Button transparent
+                                onPress={() => this.segmentClicked(3)}
+                            active={this.state.activeIndex === 3}>
+                            <Icon name='ios-bookmark' 
+                                style={[ this.state.activeIndex === 3 ? {} : {color: 'grey'} ]}/>
+                        </Button>
+                    </View>
+                    
+                    {/* 아래 코드 추가 */}
+                    { this.renderSection() }
                 </Content>
             </Container>
         );
