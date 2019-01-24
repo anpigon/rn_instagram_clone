@@ -18,3 +18,7 @@
 * [[React Native] 인스타그램 UI 만들기 #5](https://busy.org/@anpigon/react-native-ui-5-1548346515419)
 
 ---
+
+실제 구현한 앱의 동작 화면입니다.
+
+![](https://cdn.steemitimages.com/DQmNdRKUTLPzkJzEsddqkDF7tWhuZefHP6qS2PKpbL78W46/2019-01-25%2000-21-27.2019-01-25%2000_23_38.gif)
