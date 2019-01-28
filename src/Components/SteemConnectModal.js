@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {  WebView } from 'react-native';
 import { Icon, Container, Button, Header, Right } from 'native-base'; 
+// import Config from 'react-native-config';
 
 import steemConnect from '../steemConnect';
 
@@ -8,6 +9,8 @@ class SteemConnectModal extends Component {
 
   constructor(props) {
     super(props);
+
+    // console.log(Config);
   }
 
   // webview 상태 변경 체크
