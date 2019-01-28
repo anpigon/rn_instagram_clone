@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base';
+import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body, Spinner } from 'native-base';
 import CardComponent from '../CardComponent';
+
+import { fetchFeeds } from '../../reducers/steemReducer';
  
-export default class HomeTab extends Component {
+class HomeTab extends Component {
 
     static navigationOptions = {
         tabBarIcon: ({ tintColor }) => (
@@ -18,11 +22,13 @@ export default class HomeTab extends Component {
     }
 
     componentWillMount() {
-        this.fetchFeeds().then(feeds => {
-            this.setState({
-                feeds
-            })
-        });
+        this.props.fetchFeeds('kr');
+
+        // this.fetchFeeds().then(feeds => {
+        //     this.setState({
+        //         feeds
+        //     })
+        // });
         this.fetchFollowing().then(followings => {
             this.setState({
                 followings
@@ -50,34 +56,35 @@ export default class HomeTab extends Component {
         .then(res => res.result.map(({following}) => following))
     }
 
-    fetchFeeds() {
-        const data = {
-            id: 1,
-            jsonrpc: "2.0",
-            method: "call",
-            params: [
-                "database_api",
-                "get_discussions_by_created",
-                [
-                    {
-                        tag: "kr",
-                        limit: 10,
-                        // start_author:"",
-                        // start_permlink:""
-                    }
-                ]
-            ]
-        };
-        return fetch('https://api.steemit.com',
-        {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => res.result)
-    }
+    // fetchFeeds() {
+    //     const data = {
+    //         id: 1,
+    //         jsonrpc: "2.0",
+    //         method: "call",
+    //         params: [
+    //             "database_api",
+    //             "get_discussions_by_created",
+    //             [
+    //                 {
+    //                     tag: "kr",
+    //                     limit: 10,
+    //                     // start_author:"",
+    //                     // start_permlink:""
+    //                 }
+    //             ]
+    //         ]
+    //     };
+    //     return fetch('https://api.steemit.com',
+    //     {
+    //         method: 'POST',
+    //         body: JSON.stringify(data)
+    //     })
+    //     .then(res => res.json())
+    //     .then(res => res.result)
+    // }
 
     render() {
+        // console.log(this.props);
         return (
             <Container style={style.container}>
                 <Header>
@@ -118,7 +125,11 @@ export default class HomeTab extends Component {
                     </View>
                     {/* 여기까지 스토리 헤더 끝 */}
                     {
-                        this.state.feeds.map(feed => (
+                        !this.props.feeds || this.props.feeds.length === 0
+                        ?
+                        <Spinner color='blue'/>
+                        :
+                        this.props.feeds.map(feed => (
                             <CardComponent data={ feed } key={ feed.url }/>
                         ))
                     }
@@ -134,3 +145,22 @@ const style = StyleSheet.create({
         backgroundColor: 'white'
     }
 });
+
+const mapStateToProps = (state) => {
+    // console.log('mapStateToProps', state);
+    return {
+        feeds: state.steem.feeds
+    }
+};
+
+const mapDispatchToProps = { fetchFeeds };
+// const mapDispatchToProps = (dispatch) => { 
+//     return bindActionCreators({
+//         fetchFeeds
+//     });
+// };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeTab);

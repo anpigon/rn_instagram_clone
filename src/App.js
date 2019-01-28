@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import MainScreen from './Components/MainScreen';
-import LoginScreen from './Components/LoginScreen';
+
+import MainScreen from './components/MainScreen';
+import LoginScreen from './components/LoginScreen';
 
 const AppStackNavigator = createStackNavigator({
+  Main: { screen: MainScreen },
   Login: { screen: LoginScreen },
-  Main: { screen: MainScreen }
 });
 
 export default createAppContainer(AppStackNavigator);
