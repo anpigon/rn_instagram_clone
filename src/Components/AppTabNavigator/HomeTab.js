@@ -10,7 +10,7 @@ import CardComponent from '../CardComponent';
 
 import { fetchFeeds } from '../../reducers/steemReducer';
 
-const DEFAULT_LIMIT = 3;
+const DEFAULT_LIMIT = 5;
 
 class HomeTab extends Component {
 
@@ -24,9 +24,9 @@ class HomeTab extends Component {
     super(props);
 
     this.state = {
+      dataset: null,
       feeds: null,
       next: {
-        isNext: false, // 다음 글이 있는지 여부
         startAuthor: null,
         startPermlink: null,
       },
@@ -34,8 +34,8 @@ class HomeTab extends Component {
     };
   }
 
-  setupImpagination() {
-    const { startAuthor, startPermlink } = this.state.next;
+  // 피드 가져오기
+  fetchFeeds = ({ tag, limit, startAuthor, startPermlink }) => {
     const data = {
       id: 1,
       jsonrpc: "2.0",
@@ -45,15 +45,48 @@ class HomeTab extends Component {
         "get_discussions_by_created",
         [
           {
-            tag: "kr",
-            limit: DEFAULT_LIMIT + 1,
+            tag,
+            limit,
             start_author: startAuthor,
             start_permlink: startPermlink
           }
         ]
       ]
     };
-    
+    return fetch('https://api.steemit.com', { method: 'POST', body: JSON.stringify(data) })
+      .then(res => res.json())
+      .then(res => res.result)
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  setupImpagination = () => {
+    // 다음 피드 조회
+    _fetchFeeds = () => {
+      const { startAuthor, startPermlink } = this.state.next;
+      return this.fetchFeeds({
+        tag: 'kr',
+        limit: DEFAULT_LIMIT + 1,
+        startAuthor,
+        startPermlink
+      }).then(feeds => {
+        let next = {
+          startAuthor: '',
+          startPermlink: '',
+        }
+        if(feeds.length > DEFAULT_LIMIT) {
+          const { author, permlink } = feeds.pop();
+          next = {
+            startAuthor: author,
+            startPermlink: permlink
+          }
+        }
+        this.setState({ next });
+        return feeds;
+      });
+    }
+
     let dataset = new Dataset({
       pageSize: DEFAULT_LIMIT, // 한번에 가져올 레코드 갯수
       observe: (nextState) => {
@@ -61,42 +94,12 @@ class HomeTab extends Component {
         this.setState({ feeds: nextState });
       },
       fetch(pageOffset, pageSize, stats) {
-        console.log({pageOffset, pageSize, stats});
-        return fetch('https://api.steemit.com',
-        {
-          method: 'POST',
-          body: JSON.stringify(data),
-        })
-        .then(res => res.json())
-        .then(res => {
-          let next = {
-            isNext: false, // 다음 글이 있는지 여부
-            startAuthor: '',
-            startPermlink: ''
-          }
-          if(res.result.length > DEFAULT_LIMIT) {
-            const { author, permlink } = res.result.pop();
-            next = {
-              isNext: true, // 다음 글이 있는지 여부
-              startAuthor: author,
-              startPermlink: permlink
-            }
-          }
-          stats.startAuthor = author;
-          stats.startPermlink = permlink;
-          console.log('stats', stats);
-          this.setState({ next });
-          pageOffset = next;
-
-          // 레코드를 리턴한다.
-          return res.result;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+        return _fetchFeeds();
       }
     });
+
     dataset.setReadOffset(0);
+    this.setState({ dataset });
   }
 
   setCurrentReadOffset = (event) => {
@@ -107,35 +110,34 @@ class HomeTab extends Component {
   }
 
   componentWillMount() {
-    // this.props.fetchFeeds('kr');
     this.setupImpagination();
 
     this.fetchFollowing().then(followings => {
-        this.setState({
-            followings
-        })
+      this.setState({
+        followings
+      });
     });
   }
 
-    fetchFollowing() {
-        const data = {
-            id: 2,
-            jsonrpc: "2.0",
-            method: "call",
-            params: [
-              "follow_api",
-              "get_following",
-              ["anpigon", "", "blog", 10]
-            ]
-        };
-        return fetch('https://api.steemit.com',
-        {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => res.result.map(({following}) => following))
-    }
+  fetchFollowing() {
+    const data = {
+      id: 2,
+      jsonrpc: "2.0",
+      method: "call",
+      params: [
+        "follow_api",
+        "get_following",
+        ["anpigon", "", "blog", 10]
+      ]
+    };
+    return fetch('https://api.steemit.com',
+    {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => res.result.map(({following}) => following))
+  }
 
   render() {
     // console.log(this.props);
