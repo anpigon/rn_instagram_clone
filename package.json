@@ -9,12 +9,18 @@
   "dependencies": {
     "@expo/vector-icons": "^9.0.0",
     "expo": "^32.0.0",
+    "impagination": "^1.0.0-alpha.3",
     "native-base": "^2.10.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-config": "^0.11.7",
     "react-navigation": "^3.0.9",
-    "steemconnect": "^2.0.1"
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.6.4",
+    "redux-thunk": "^2.3.0",
+    "steemconnect": "^2.0.1",
+    "util": "^0.11.1"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
