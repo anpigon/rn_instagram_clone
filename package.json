@@ -19,6 +19,7 @@
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
     "redux-thunk": "^2.3.0",
+    "remarkable": "^1.7.1",
     "steemconnect": "^2.0.1",
     "util": "^0.11.1"
   },

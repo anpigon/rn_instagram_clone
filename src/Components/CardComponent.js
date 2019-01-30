@@ -36,7 +36,8 @@ export default class CardCompnent extends Component {
             </CardItem>
             <CardItem>
               <Text>
-              { data.body.replace(/\n/g,' ').slice(0, 200) }
+              {/* { data.body.replace(/\n/g,' ').slice(0, 200) } */}
+              { data.summary }
               </Text>
             </CardItem>
             <CardItem style={{ height:45 }}>

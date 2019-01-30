@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 import Dataset from 'impagination';
+import Remarkable from 'remarkable';
 
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body, Spinner } from 'native-base';
 import CardComponent from '../CardComponent';
@@ -11,6 +12,7 @@ import CardComponent from '../CardComponent';
 import { fetchFeeds } from '../../reducers/steemReducer';
 
 const DEFAULT_LIMIT = 5;
+const md = new Remarkable({ html: true, linkify: false, breaks: true })
 
 class HomeTab extends Component {
 
@@ -55,10 +57,22 @@ class HomeTab extends Component {
     };
     return fetch('https://api.steemit.com', { method: 'POST', body: JSON.stringify(data) })
       .then(res => res.json())
-      .then(res => res.result)
+      .then(res => {
+        return res.result.map(e => {
+          let body = md.render(e.body);
+          // var r = /^http(s)?:\/\/steemit(dev|stage)?images.com\//g
+      // , o = /http(s)?:\/\/steemit(dev|stage)?images.com\/([0-9]+x[0-9]+)\//g;
+          let summary = body.replace(/<\/?[^>]+(>|$)/g, '').replace(/https?:\/\/[^\s]+/g, "").replace(/(^(\n|\r|\s)*)>([\s\S]*?).*\s*/g, "").replace(/\s+/g, " ").replace(/^\s*|\s*$/g, "").slice(0, 200);
+          return {
+            ...e,
+            body,
+            summary
+          };
+        })
+      })
       .catch(error => {
         console.error(error);
-      });
+      });       
   }
 
   setupImpagination = () => {
@@ -187,7 +201,7 @@ class HomeTab extends Component {
                 return <Spinner color='blue' key={ Math.random() }/>;
               }
               const { content } = record;
-              return <CardComponent data={ content } key={ content.url }/>
+              return <CardComponent data={ content } key={ content.post_id }/>
             })
           }
         </Content>
