@@ -163,7 +163,10 @@ class HomeTab extends Component {
           <Body><Text>Instagram</Text></Body>
           <Right><Icon name='ios-send' style={{ paddingRight:10 }}/></Right>
         </Header>
-        <Content scrollEventThrottle={300} onScroll={this.setCurrentReadOffset}>
+        <Content 
+          scrollEventThrottle={300} 
+          onScroll={this.setCurrentReadOffset}
+          removeClippedSubviews={true}>
           {/* 여기부터 스토리 헤더 시작 */}
           <View style={{ height: 100 }}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 7 }}>
