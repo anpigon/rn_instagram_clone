@@ -23,10 +23,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anpigon.insteemgram"
     },
     "androidStatusBar": {
       "barStyle": "dark-content"
+    },
+    "android": {
+      "package": "com.anpigon.insteemgram"
     }
   }
 }
