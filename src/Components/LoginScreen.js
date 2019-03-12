@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Modal } from 'react-native';
+import { 
+	StyleSheet, 
+	View, 
+	Modal, 
+	AsyncStorage // here
+} from 'react-native';
 import { Icon, Container, Button, Text } from 'native-base'; 
 
 import SteemConnectModal from './SteemConnectModal';
@@ -15,9 +20,14 @@ export default class LoginScreen extends Component {
 
     this.state = {
 			modalVisible: false,
-			username: null,
+			// username: null,
 		}
 	}
+
+	_signInAsync = async (userToken) => {
+    await AsyncStorage.setItem('userToken', userToken);
+    this.props.navigation.navigate('App');
+  };
 
 	// 모달창 닫기
 	_handleOnModalClose = () => {
@@ -29,6 +39,9 @@ export default class LoginScreen extends Component {
 		this.setState({ modalVisible: false });
 		// console.log(tokens);
 
+		this._signInAsync(tokens.access_token)
+
+		/*
 		// AccessToken 셋팅
 		steemConnect.setAccessToken(tokens.access_token);
 
@@ -38,6 +51,7 @@ export default class LoginScreen extends Component {
 			console.log('profile', profile);
 			this.setState({ username: profile.name });
 		});
+		*/
 	}
 
   render() {
@@ -46,8 +60,8 @@ export default class LoginScreen extends Component {
     return (
 			<Container style={styles.container}>
 				<View style={{justifyContent:'center',alignItems: 'center'}}>
-					{
-						username ? <Text>{ username }님 환영합니다.</Text> :
+					{/* {
+						username ? <Text>{ username }님 환영합니다.</Text> : */}
 						<Button 
 							onPress={() => { 
 								this.setState({ modalVisible: true }) 
@@ -56,7 +70,7 @@ export default class LoginScreen extends Component {
 							<Icon name="login" type="AntDesign" />
 							<Text>Steemconnect Login</Text>
 						</Button>
-					}
+					{/* } */}
 				</View>
 
 				{/** 스팀커넥트 모달창 **/}
