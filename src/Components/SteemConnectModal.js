@@ -39,11 +39,11 @@ class SteemConnectModal extends Component {
   render() {
     // 로그인 URL 생성
     const link = steemConnect.getLoginURL();
-    // console.log(link);
+    console.log('link:', link);
     
     return (
       <Container style={{ flex: 1 }}>
-        <Header>
+        <Header androidStatusBarColor="white">
           <Right>
             <Button icon transparent
               onPress={() => {

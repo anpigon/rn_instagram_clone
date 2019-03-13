@@ -1,89 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+// import { bindActionCreators } from 'redux';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { getFeeds, getFollowing } from '../../steem';
+// import removeMarkdown from 'remove-markdown';
 
 import Dataset from 'impagination';
-import Remarkable from 'remarkable';
+// import Remarkable from 'remarkable';
 
-import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body, Spinner } from 'native-base';
+import { Container, Content, Icon, Thumbnail, Header, Title, Left, Right, Body, Spinner } from 'native-base';
 import CardComponent from '../CardComponent';
 
-import { fetchFeeds } from '../../reducers/steemReducer';
-
 const DEFAULT_LIMIT = 5;
-const md = new Remarkable({ html: true, linkify: false, breaks: true })
+// const md = new Remarkable({ html: true, linkify: false, breaks: false });
 
 class HomeTab extends Component {
-
-  static navigationOptions = {
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name='ios-home' style={{ color: tintColor }} />
-    )
-  }
 
   constructor(props) {
     super(props);
 
     this.state = {
       dataset: null,
-      feeds: null,
+      feeds: [],
       next: {
-        startAuthor: null,
-        startPermlink: null,
+        startAuthor: '',
+        startPermlink: '',
       },
       followings: []
     };
   }
 
   // 피드 가져오기
-  fetchFeeds = ({ tag, limit, startAuthor, startPermlink }) => {
-    const data = {
-      id: 1,
-      jsonrpc: "2.0",
-      method: "call",
-      params: [
-        "database_api",
-        "get_discussions_by_created",
-        [
-          {
-            tag,
-            limit,
-            start_author: startAuthor,
-            start_permlink: startPermlink
-          }
-        ]
-      ]
-    };
-    return fetch('https://api.steemit.com', { method: 'POST', body: JSON.stringify(data) })
-      .then(res => res.json())
-      .then(res => {
-        return res.result.map(e => {
-          let body = md.render(e.body);
-          // var r = /^http(s)?:\/\/steemit(dev|stage)?images.com\//g
-      // , o = /http(s)?:\/\/steemit(dev|stage)?images.com\/([0-9]+x[0-9]+)\//g;
-          let summary = body.replace(/<\/?[^>]+(>|$)/g, '').replace(/https?:\/\/[^\s]+/g, "").replace(/(^(\n|\r|\s)*)>([\s\S]*?).*\s*/g, "").replace(/\s+/g, " ").replace(/^\s*|\s*$/g, "").slice(0, 200);
-          return {
-            ...e,
-            body,
-            summary
-          };
-        })
-      })
-      .catch(error => {
-        console.error(error);
-      });       
-  }
-
   setupImpagination = () => {
     // 다음 피드 조회
     _fetchFeeds = () => {
       const { startAuthor, startPermlink } = this.state.next;
-      return this.fetchFeeds({
-        tag: 'kr',
+      return getFeeds({
+        tag: this.props.username,
         limit: DEFAULT_LIMIT + 1,
-        startAuthor,
-        startPermlink
+        start_author: startAuthor,
+        start_permlink: startPermlink
       }).then(feeds => {
         let next = {
           startAuthor: '',
@@ -98,7 +54,8 @@ class HomeTab extends Component {
         }
         this.setState({ next });
         return feeds;
-      });
+      })
+      .catch(error => console.log(error));
     }
 
     let dataset = new Dataset({
@@ -126,41 +83,20 @@ class HomeTab extends Component {
   componentWillMount() {
     this.setupImpagination();
 
-    this.fetchFollowing().then(followings => {
+    // getFollowing('anpigon', '', 10).then(followings => {
+    getFollowing(this.props.username, '', 10).then(followings => {
       this.setState({
         followings
       });
     });
   }
 
-  fetchFollowing() {
-    const data = {
-      id: 2,
-      jsonrpc: "2.0",
-      method: "call",
-      params: [
-        "follow_api",
-        "get_following",
-        ["anpigon", "", "blog", 10]
-      ]
-    };
-    return fetch('https://api.steemit.com',
-    {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => res.result.map(({following}) => following))
-  }
-
   render() {
-    // console.log(this.props);
-    // console.log('datasetState', this.state.datasetState[0]);
     return (
       <Container style={style.container}>
         <Header>
           <Left><Icon name='ios-camera' style={{ paddingLeft:10 }}/></Left>
-          <Body><Text>Instagram</Text></Body>
+          <Body><Title style={{fontFamily:'Sweet_Sensations_Persona_Use', fontSize:30}}>Instagram</Title></Body>
           <Right><Icon name='ios-send' style={{ paddingRight:10 }}/></Right>
         </Header>
         <Content 
@@ -169,14 +105,13 @@ class HomeTab extends Component {
           removeClippedSubviews={true}>
           {/* 여기부터 스토리 헤더 시작 */}
           <View style={{ height: 100 }}>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 7 }}>
+            {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 7 }}>
               <Text style={{ fontWeight: 'bold' }}>Stories</Text>
-
               <View style={{ flexDirection: 'row', 'alignItems': 'center' }}>
                 <Icon name="md-play" style={{ fontSize: 14 }}></Icon>
                 <Text style={{ fontWeight: 'bold' }}> Watch All</Text>
               </View>
-            </View>
+            </View> */}
             <View style={{ flex: 3 }}>
               <ScrollView
                 horizontal={true}
@@ -221,19 +156,19 @@ const style = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+  const {
+    // feeds,
+    username
+  } = state.steem;
   return {
-    feeds: state.steem.feeds
+    // feeds,
+    username,
   }
 };
 
-const mapDispatchToProps = { fetchFeeds };
-// const mapDispatchToProps = (dispatch) => { 
-//     return bindActionCreators({
-//         fetchFeeds
-//     }, dispatch);
-// };
+// const mapDispatchToProps = { fetchFeeds };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  // mapDispatchToProps
 )(HomeTab);

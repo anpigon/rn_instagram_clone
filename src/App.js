@@ -9,8 +9,24 @@ import MainScreen from './components/MainScreen';
 import LoginScreen from './components/LoginScreen';
 import AuthLoadingScreen from './components/AuthLoadingScreen';
 
-const AppStack = createStackNavigator({ Main: { screen: MainScreen } });
-const AuthStack = createStackNavigator({ Login: LoginScreen });
+const AppStack = createStackNavigator({ 
+  Main: { 
+    screen: MainScreen 
+  } 
+}, 
+  {
+  headerMode: 'screen',
+  defaultNavigationOptions: {
+    header: null
+  }
+});
+
+const AuthStack = createStackNavigator({ 
+  Login: { 
+    screen: LoginScreen, 
+    navigationOptions: { header: null } 
+  }
+});
 
 export default createAppContainer(createSwitchNavigator(
   {
@@ -19,6 +35,6 @@ export default createAppContainer(createSwitchNavigator(
     Auth: AuthStack,
   },
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'AuthLoading'
   }
 ));

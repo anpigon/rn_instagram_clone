@@ -168,7 +168,7 @@ export default class ProfileTab extends Component {
 
     componentWillMount() {
         const username = 'anpigon';
-
+/*
         this.fetchState(username).then(({
             accounts,
             content,
@@ -188,7 +188,7 @@ export default class ProfileTab extends Component {
                 blogs: Object.values(content)
             })
         });
-
+*/
         /*this.fetchAccount(username).then(({name, post_count, reputation, json_metadata}) => {
             const { profile } = JSON.parse(json_metadata);
             const log = Math.log(parseInt(reputation.substring(0, 4))) / Math.log(10);

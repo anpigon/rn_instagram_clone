@@ -1,16 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import { Icon } from 'native-base'; 
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'; // 추가된 코드
 
-import HomeTab from './AppTabNavigator/HomeTab'
-import SearchTab from './AppTabNavigator/SearchTab'
-import AddMediaTab from './AppTabNavigator/AddMediaTab'
-import LikesTab from './AppTabNavigator/LikesTab'
-import ProfileTab from './AppTabNavigator/ProfileTab'
+import HomeTab from './AppTabNavigator/HomeTab';
+import SearchTab from './AppTabNavigator/SearchTab';
+import AddMediaTab from './AppTabNavigator/AddMediaTab';
+import LikesTab from './AppTabNavigator/LikesTab';
+import ProfileTab from './AppTabNavigator/ProfileTab';
 
 const AppTabNavigator = createMaterialTopTabNavigator({
-  HomeTab:{ screen: HomeTab },
+  Home:{ 
+    screen: HomeTab, 
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name='ios-home' style={{ color: tintColor }} />
+      )
+    } 
+  },
   Search:{ screen: SearchTab },
   AddMedia:{ screen: AddMediaTab },
   Likes:{ screen: LikesTab },
@@ -36,25 +43,25 @@ const AppTabNavigator = createMaterialTopTabNavigator({
     upperCaseLabel: false,
     showLabel: false,
     showIcon: true,
-  }
-});
-const AppTabContainet = createAppContainer(AppTabNavigator);
-
-export default class MainScreen extends Component {
-  static navigationOptions = {
+  },
+  defaultNavigationOptions: {
     header: null
   }
-
-  render() {
-    return <AppTabContainet/>;
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
- 
+const AppTabContainer = createAppContainer(AppTabNavigator);
+
+export default AppTabContainer;
+// export default class MainScreen extends Component {
+//   render() {
+//     return <AppTabContainet/>;
+//   }
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });
+//  

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "instagram-clone",
-    "slug": "instagram-clone",
+    "name": "insteemgram",
+    "slug": "insteemgram",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [

@@ -3,9 +3,11 @@ import Dataset from 'impagination';
 
 // 액션 타입을 정의해줍니다.
 const GET_FEEDS = 'steem/getFeeds';
+const GET_ACCOUNT = 'steem/getAccount';
 
 // 액션 생성 함수를 만듭니다.
 export const getFeeds = createAction(GET_FEEDS);
+export const loadUser = createAction(GET_ACCOUNT);
 // export function getFeeds(payload) {
 //   return { type: GET_FEEDS, payload }
 // }
@@ -13,6 +15,7 @@ export const getFeeds = createAction(GET_FEEDS);
 const DEFAULT_LIMIT = 3;
 
 const initialState = {
+  username: '',
   feeds: [],
   nextFeeds: {
     isNext: false,
@@ -103,7 +106,7 @@ export default handleActions({
     // console.log('nextFeeds', action.payload.nextFeeds);
 
     // state 업데이트
-    state = {
+    let newState = {
       ...state,
       feeds: [
         ...state.feeds,
@@ -111,6 +114,14 @@ export default handleActions({
       ],
       ...action.payload.nextFeeds
     }
-    return state;
+    return newState;
   },
+  [GET_ACCOUNT]: (state, action) => {
+    // console.log(GET_ACCOUNT, action);
+    let newState = {
+      ...state,
+      username: action.payload.username,
+    }
+    return newState;
+  }
 }, initialState);
