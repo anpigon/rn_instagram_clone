@@ -4,44 +4,54 @@ import { AsyncStorage } from 'react-native';
 import { Spinner, Container } from 'native-base';
 import { connect } from 'react-redux';
 import { TINT_COLOR } from '../constants/Colors';
-import { loadUser } from '../reducers/steemReducer';
+import { setUsername } from '../reducers/steemReducer';
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
   }
 
+  goMainScreen() {
+    this.props.navigation.navigate('App');
+  }
+
+  goLoginScreen() {
+    this.props.navigation.navigate('Auth');
+  }
+
   async componentWillMount() {
     const userToken = await SecureStore.getItemAsync('userToken', { keychainService: Constants.deviceId });
     // console.log('userToken:', userToken);
 
+    if ( !userToken ) {
+      return this.goLoginScreen();
+    }
+
     try {
-      if(userToken) {
-        const {
-          access_token,
-          issued_at,
-          expires_in,
-          username
-        }  = JSON.parse(userToken);
-        
-        // 1. exp 날짜 체크  
-        if((issued_at + expires_in) <= (Date.now()/1000)) {
-          // 만료일이 지났으면 토큰 삭제
-          console.log('expired token!!!');
-          await SecureStore.deleteItemAsync('userToken', { keychainService: Constants.deviceId });
-          this.props.navigation.navigate('Auth');
-        } else {
-          console.log('authed');
-          this.props.loadUser({ username });
-          this.props.navigation.navigate('App', { username, token: access_token });
-        }
+      const {
+        access_token,
+        issued_at,
+        expires_in,
+        username
+      }  = JSON.parse(userToken);
+      
+      // 1. exp 날짜 체크  
+      if ( (issued_at + expires_in) <= (Date.now() / 1000) ) {
+        // 만료일이 지났으면 토큰 삭제
+        console.log('expired token!!!');
+        await SecureStore.deleteItemAsync('userToken', { keychainService: Constants.deviceId });
+        this.goLoginScreen();
       } else {
-        this.props.navigation.navigate('Auth');
+        // 인증(로그인) 상태
+        // console.log('authed');
+        this.props.setUsername({ username });
+        this.goMainScreen();
       }
+      
     } catch(error) {
       console.error(error);
       await SecureStore.deleteItemAsync('userToken', { keychainService: Constants.deviceId });
-      this.props.navigation.navigate('Auth');
+      this.goLoginScreen();
     }
 
     // This will switch to the App screen or Auth screen and this loading
@@ -60,7 +70,9 @@ class AuthLoadingScreen extends React.Component {
 }
 
 const mapStateToProps = () => ({});
-const mapDispatchToProps = { loadUser };
+const mapDispatchToProps = { 
+  setUsername 
+};
 export default connect(
   mapStateToProps,
   mapDispatchToProps

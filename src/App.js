@@ -23,8 +23,11 @@ const AppStack = createStackNavigator({
 
 const AuthStack = createStackNavigator({ 
   Login: { 
-    screen: LoginScreen, 
-    navigationOptions: { header: null } 
+    screen: LoginScreen,
+    navigationOptions: {
+      title: 'Login',
+      header: null
+    }
   }
 });
 

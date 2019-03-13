@@ -10,25 +10,21 @@ import styled from 'styled-components';
 
 import { Constants, SecureStore } from 'expo';
 import SteemConnectModal from './SteemConnectModal';
-import steemConnect from '../steemConnect';
+// import steemConnect from '../steemConnect';
 
-const Title = styled.Text`
+const LogoText = styled.Text`
 	font-family: 'Sweet_Sensations_Persona_Use';
 	font-size: 60;
-	/*padding-vertical: 50;*/
-	margin-bottom: 60;
+	margin-bottom: 50;
 	color: #242424;
 `;
 
 export default class LoginScreen extends Component {
-  static navigationOptions = {
-		title: 'Login',
-	}
-	
-  constructor(props) {
-    super(props);
 
-    this.state = {
+	constructor(props) {
+		super(props);
+
+		this.state = {
 			modalVisible: false,
 			loggedin: false
 			// username: null,
@@ -42,11 +38,11 @@ export default class LoginScreen extends Component {
 		userToken['issued_at'] = Math.floor(Date.now() / 1000);
 
 		// 토큰 저장
-    await SecureStore.setItemAsync('userToken', JSON.stringify(userToken), { keychainService: Constants.deviceId });
+		await SecureStore.setItemAsync('userToken', JSON.stringify(userToken), { keychainService: Constants.deviceId });
 		// console.log('userToken:', userToken);
 		
-    this.props.navigation.navigate('App');
-  };
+		this.props.navigation.navigate('App');
+	};
 
 	// 모달창 닫기
 	_handleOnModalClose = () => {
@@ -73,32 +69,35 @@ export default class LoginScreen extends Component {
 		*/
 	}
 
-  render() {
-    return (
+	render() {
+		return (
 			<Container style={styles.container}>
-				<Title>Insteemgram</Title>
-				<Button style={styles.loginButton}
+				<LogoText>Insteemgram</LogoText>
+				<Button 
+					block
+					primary
+					style={styles.loginButton}
+					disabled={this.state.loggedin}
 					onPress={() => { 
 						this.setState({ modalVisible: true }) 
 					}}
-					disabled={this.state.loggedin}
-					block
-					primary>
+				>
 					<Text>Steemconnect Login</Text>
 				</Button>
 				{/** 스팀커넥트 모달창 **/}
 				<Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}>
-          <SteemConnectModal
-            handleOnModalClose={this._handleOnModalClose}
+					animationType="slide"
+					transparent={false}
+					onRequestClose={this._handleOnModalClose}
+					visible={this.state.modalVisible}>
+					<SteemConnectModal
+						handleOnModalClose={this._handleOnModalClose}
 						onSteemconnectSuccess={this._onSteemconnectSuccess}
-          />
-        </Modal>
+					/>
+				</Modal>
 			</Container>
 		)
-  }
+	}
 }
 
 const styles = StyleSheet.create({
@@ -108,8 +107,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 	},
 	loginButton: {
-		marginHorizontal: 30, 
+		marginHorizontal: 35, 
 		backgroundColor: '#3798f2', 
-		height: 55
+		height: 55,
+		borderRadius: 7,
 	}
 });

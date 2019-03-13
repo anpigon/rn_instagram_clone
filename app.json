@@ -27,7 +27,8 @@
       "bundleIdentifier": "com.anpigon.insteemgram"
     },
     "androidStatusBar": {
-      "barStyle": "dark-content"
+      "barStyle": "dark-content",
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "package": "com.anpigon.insteemgram"

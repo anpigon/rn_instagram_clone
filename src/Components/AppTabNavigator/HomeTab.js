@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import { getFeeds, getFollowing } from '../../steem';
 // import removeMarkdown from 'remove-markdown';
 
@@ -10,6 +10,7 @@ import Dataset from 'impagination';
 
 import { Container, Content, Icon, Thumbnail, Header, Title, Left, Right, Body, Spinner } from 'native-base';
 import CardComponent from '../CardComponent';
+import { TINT_COLOR } from '../../constants/Colors'
 
 const DEFAULT_LIMIT = 5;
 // const md = new Remarkable({ html: true, linkify: false, breaks: false });
@@ -21,11 +22,11 @@ class HomeTab extends Component {
 
     this.state = {
       dataset: null,
-      feeds: [],
       next: {
         startAuthor: '',
         startPermlink: '',
       },
+      feeds: [],
       followings: []
     };
   }
@@ -84,7 +85,7 @@ class HomeTab extends Component {
     this.setupImpagination();
 
     // getFollowing('anpigon', '', 10).then(followings => {
-    getFollowing(this.props.username, '', 10).then(followings => {
+    getFollowing(this.props.username, '', 20).then(followings => {
       this.setState({
         followings
       });
@@ -92,66 +93,83 @@ class HomeTab extends Component {
   }
 
   render() {
+    const {
+      followings,
+      feeds
+    } = this.state;
+
     return (
-      <Container style={style.container}>
-        <Header>
-          <Left><Icon name='ios-camera' style={{ paddingLeft:10 }}/></Left>
-          <Body><Title style={{fontFamily:'Sweet_Sensations_Persona_Use', fontSize:30}}>Instagram</Title></Body>
-          <Right><Icon name='ios-send' style={{ paddingRight:10 }}/></Right>
-        </Header>
-        <Content 
-          scrollEventThrottle={300} 
-          onScroll={this.setCurrentReadOffset}
-          removeClippedSubviews={true}>
-          {/* 여기부터 스토리 헤더 시작 */}
-          <View style={{ height: 100 }}>
-            {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 7 }}>
-              <Text style={{ fontWeight: 'bold' }}>Stories</Text>
-              <View style={{ flexDirection: 'row', 'alignItems': 'center' }}>
-                <Icon name="md-play" style={{ fontSize: 14 }}></Icon>
-                <Text style={{ fontWeight: 'bold' }}> Watch All</Text>
+      <>
+        <Container style={styles.container}>        
+          <Header 
+            style={{backgroundColor:'white'}}
+            androidStatusBarColor="white">
+            <Left><Icon name='ios-camera' style={{ paddingLeft:10 }}/></Left>
+            <Body>
+              <Title style={styles.title}>Instagram</Title>
+            </Body>
+            <Right><Icon name='ios-send' style={{ paddingRight:10 }}/></Right>
+          </Header>
+          <Content 
+            scrollEventThrottle={300} 
+            onScroll={this.setCurrentReadOffset}
+            removeClippedSubviews={true}>
+            {/* 여기부터 스토리 헤더 시작 */}
+            <View style={{ height: 100 }}>
+              {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 7 }}>
+                <Text style={{ fontWeight: 'bold' }}>Stories</Text>
+                <View style={{ flexDirection: 'row', 'alignItems': 'center' }}>
+                  <Icon name="md-play" style={{ fontSize: 14 }}></Icon>
+                  <Text style={{ fontWeight: 'bold' }}> Watch All</Text>
+                </View>
+              </View> */}
+              <View style={{ flex: 3 }}>
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{
+                    alignItems: 'center',
+                    paddingStart: 5,
+                    paddingEnd: 5
+                  }}>
+                  {
+                    (followings||[]).map(following => (
+                      <Thumbnail 
+                        key={ following }
+                        style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
+                        source={{uri: `https://steemitimages.com/u/${following}/avatar` }} />
+                    ))
+                  }
+                </ScrollView>
               </View>
-            </View> */}
-            <View style={{ flex: 3 }}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                  alignItems: 'center',
-                  paddingStart: 5,
-                  paddingEnd: 5
-                }}>
-                {
-                  this.state.followings.map(following => (
-                    <Thumbnail 
-                      key={ following }
-                      style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
-                      source={{uri: `https://steemitimages.com/u/${following}/avatar` }} />
-                  ))
-                }
-              </ScrollView>
             </View>
-          </View>
-          {/* 여기까지 스토리 헤더 끝 */}
-          {
-            this.state.feeds.map(record => {
-              if (!record.isSettled) {
-                return <Spinner color='blue' key={ Math.random() }/>;
-              }
-              const { content } = record;
-              return <CardComponent data={ content } key={ content.post_id }/>
-            })
-          }
-        </Content>
-      </Container>
+            {/* 여기까지 스토리 헤더 끝 */}
+            {
+              (feeds||[]).map(record => {
+                if (!record.isSettled) {
+                  return <Spinner color={ TINT_COLOR } key={ Math.random() }/>;
+                }
+                const { content } = record;
+                return <CardComponent data={ content } key={ content.post_id }/>
+              })
+            }
+          </Content>
+        </Container>
+        <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+      </>
     );
   }
 }
  
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
+  },
+  title: {
+    fontFamily: 'Sweet_Sensations_Persona_Use', 
+    fontSize: 30,
+    color: '#242424',
   }
 });
 

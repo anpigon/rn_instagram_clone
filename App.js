@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
 import { Root } from "native-base";
 import { Font, AppLoading } from "expo";
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import { createLogger } from 'redux-logger';
 
 import App from './src/App';
 import allReducers from './src/reducers';
 
-const store = createStore(allReducers, applyMiddleware(thunk));
+const logger = createLogger(); 
+const store = createStore(allReducers, applyMiddleware(logger, thunk));
 
 // export default () => <App/>;
 export default class RootApp extends Component {
@@ -20,12 +23,16 @@ export default class RootApp extends Component {
     };
   }
 
-  async componentWillMount() {
-    console.log('Run App!!!');
+  // async componentWillMount() {
+  //   console.log('Run App!!!');
 
-    await this.loadAssets();
-    this.setState({ loaded: true });
-  }
+  //   await this.loadAssets();
+  //   this.setState({ loaded: true });
+  // }
+
+  handleError = (error) => console.log(error);
+
+  handleLoaded = () => this.setState({ loaded: true });
 
   loadAssets = async() => {
 		// Font Preloading
@@ -45,18 +52,23 @@ export default class RootApp extends Component {
 
   render() {
     const { loaded } = this.state;
-    if(loaded) {
-      return (
-        <Provider store={ store }>
+    return (
+      <>
+        {
+          (loaded)
+          ?
           <Root>
-            <App/>
+            <Provider store={ store }>
+              <App/>
+            </Provider>
           </Root>
-        </Provider>
-      );
-    } else {
-      return (
-        <AppLoading />
-      );
-    }
+          :
+          <AppLoading 
+            startAsync={this.loadAssets}
+            onFinish={this.handleLoaded} 
+            onError={this.handleError} />
+        }
+      </>
+    );
   }
 }
