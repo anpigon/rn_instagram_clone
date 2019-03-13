@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  WebView } from 'react-native';
+import {  WebView, Platform } from 'react-native';
 import { Icon, Container, Button, Header, Right } from 'native-base'; 
 // import Config from 'react-native-config';
 
@@ -43,12 +43,28 @@ class SteemConnectModal extends Component {
     
     return (
       <Container style={{ flex: 1 }}>
-        <Header androidStatusBarColor="white">
+        <Header>
+        {/* <Header style={
+          Platform.select({
+            'android': { backgroundColor:'white' }
+          })
+        }></Header> */}
           <Right>
             <Button icon transparent
               onPress={() => {
                 this.props.handleOnModalClose()
-              }}><Icon name='ios-close'/></Button>
+              }}>
+              <Icon name='ios-close' />
+              {/* <Icon name='ios-close' 
+                style={
+                  Platform.select({
+                    'android': { 
+                      color:'black',
+                      fontSize: 30
+                    }
+                  })
+                }/> */}
+              </Button>
           </Right>
         </Header>
         <WebView
