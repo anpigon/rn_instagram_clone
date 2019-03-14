@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { 
 	StyleSheet, 
 	View, 
@@ -19,7 +20,7 @@ const LogoText = styled.Text`
 	color: #242424;
 `;
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -41,6 +42,8 @@ export default class LoginScreen extends Component {
 		await SecureStore.setItemAsync('userToken', JSON.stringify(userToken), { keychainService: Constants.deviceId });
 		// console.log('userToken:', userToken);
 		
+		this.props.setUsername({ username: userToken.username });
+
 		this.props.navigation.navigate('App');
 	};
 
@@ -113,3 +116,12 @@ const styles = StyleSheet.create({
 		borderRadius: 7,
 	}
 });
+
+const mapStateToProps = (state) => {
+  const { username } = state.steem;
+  return { username }
+};
+
+export default connect(
+  mapStateToProps,
+)(LoginScreen);

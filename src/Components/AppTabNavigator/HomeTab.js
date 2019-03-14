@@ -174,12 +174,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const {
-    // feeds,
-    username
-  } = state.steem;
+  const { username } = state.steem;
   return {
-    // feeds,
     username,
   }
 };
