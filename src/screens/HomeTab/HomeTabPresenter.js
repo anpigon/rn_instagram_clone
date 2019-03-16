@@ -23,7 +23,8 @@ function HomeTabPresenter(props) {
   const {
     loading,
     followings,
-    feeds
+    feeds,
+    onScroll
   } = props;
 
   return (
@@ -39,7 +40,7 @@ function HomeTabPresenter(props) {
       </Header>
       <Content 
         scrollEventThrottle={300} 
-        onScroll={this.setCurrentReadOffset}
+        onScroll={onScroll}
         removeClippedSubviews={true}>
         {/* 여기부터 스토리 헤더 시작 */}
         <View style={{ height: 100 }}>
@@ -77,7 +78,16 @@ function HomeTabPresenter(props) {
               return <Spinner color={ TINT_COLOR } key={ Math.random() }/>;
             }
             const { content } = record;
-            return <CardComponent data={ content } key={ content.post_id }/>
+            return <CardComponent 
+              key={ content.post_id }
+              data={ content } 
+              onPress={
+                (event) => {
+                  event.stopPropagation();
+                  props.navigation.navigate('Details', { content });
+                }
+              }
+            />
           })
         }
       </Content>
@@ -89,6 +99,8 @@ HomeTabPresenter.propTypes = {
   loading: PropTypes.bool.isRequired,
   followings: PropTypes.array,
   feeds: PropTypes.object,
+  onScroll: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
 }
  
 const styles = StyleSheet.create({

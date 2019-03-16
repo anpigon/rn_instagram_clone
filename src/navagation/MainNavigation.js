@@ -5,16 +5,23 @@ import {
   createAppContainer 
 } from 'react-navigation';
 
-import MainScreen from '../components/MainScreen';
+// import MainScreen from '../components/MainScreen';
+import TabNavigation from '../navagation/TabNavigation';
 import LoginScreen from '../components/LoginScreen';
 import AuthLoadingScreen from '../components/AuthLoadingScreen';
 
+import DetailScreen from '../screens/DetailScreen';
+
 const AppStack = createStackNavigator({ 
   Main: { 
-    screen: MainScreen 
+    screen: TabNavigation 
+  },
+  Details: {
+    screen: DetailScreen
   } 
 }, 
 {
+  initialRouteName: "Main",
   headerMode: 'screen',
   defaultNavigationOptions: {
     header: null

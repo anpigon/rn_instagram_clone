@@ -97,6 +97,8 @@ class HomeTabContainer extends Component {
       loading={loading}
       followings={followings}
       feeds={feeds}
+      onScroll={this.setCurrentReadOffset}
+      navigation={this.props.navigation}
     />;
   }
 }
