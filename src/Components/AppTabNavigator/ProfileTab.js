@@ -26,11 +26,11 @@ const { width, height } = Dimensions.get('window');
 
 export default class ProfileTab extends Component {
 
-	static navigationOptions = {
-		tabBarIcon: ({ tintColor }) => (
-			<Icon name='person' style={{ color: tintColor }} />
-		)
-    }
+	// static navigationOptions = {
+	// 	tabBarIcon: ({ tintColor }) => (
+	// 		<Icon name='person' style={{ color: tintColor }} />
+	// 	)
+    // }
 
     constructor(props){
         super(props)

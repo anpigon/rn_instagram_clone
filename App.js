@@ -7,7 +7,8 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 
-import App from './src/App';
+// import App from './src/App';
+import MainNavigation from './src/navagation/MainNavigation';
 import allReducers from './src/reducers';
 
 const logger = createLogger(); 
@@ -54,12 +55,13 @@ export default class RootApp extends Component {
     const { loaded } = this.state;
     return (
       <>
+        <StatusBar barStyle="dark-content"/>
         {
           (loaded)
           ?
           <Root>
             <Provider store={ store }>
-              <App/>
+              <MainNavigation/>
             </Provider>
           </Root>
           :

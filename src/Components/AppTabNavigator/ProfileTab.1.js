@@ -36,65 +36,65 @@ export default class ProfileTab extends Component{
     }
 
     fetchAccount(username) {
-        const data = {
-            id: 3,
-            jsonrpc: "2.0",
-            method: "call",
-            params: [
-              "database_api",
-              "get_accounts",
-              [[username]]
-            ]
-        };
-        return fetch('https://api.steemit.com',
-        {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => res.result[0])
+        // const data = {
+        //     id: 3,
+        //     jsonrpc: "2.0",
+        //     method: "call",
+        //     params: [
+        //       "database_api",
+        //       "get_accounts",
+        //       [[username]]
+        //     ]
+        // };
+        // return fetch('https://api.steemit.com',
+        // {
+        //     method: 'POST',
+        //     body: JSON.stringify(data)
+        // })
+        // .then(res => res.json())
+        // .then(res => res.result[0])
     }
 
     fetchFollowCount(username) {
-        const data = {
-            id: 4,
-            jsonrpc: "2.0",
-            method: "call",
-            params: [
-              "follow_api",
-              "get_follow_count",
-              [username]
-            ]
-        };
-        return fetch('https://api.steemit.com',
-        {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => res.result)
+        // const data = {
+        //     id: 4,
+        //     jsonrpc: "2.0",
+        //     method: "call",
+        //     params: [
+        //       "follow_api",
+        //       "get_follow_count",
+        //       [username]
+        //     ]
+        // };
+        // return fetch('https://api.steemit.com',
+        // {
+        //     method: 'POST',
+        //     body: JSON.stringify(data)
+        // })
+        // .then(res => res.json())
+        // .then(res => res.result)
     }
 
     componentWillMount() {
         const username = 'anpigon';
 
-        this.fetchAccount(username).then(({name, post_count, reputation, json_metadata}) => {
-            const { profile } = JSON.parse(json_metadata);
-            const log = Math.log(parseInt(reputation.substring(0, 4))) / Math.log(10);
-            this.setState({
-                name,
-                reputation: Math.max(((reputation.length - 1) + (log - parseInt(log))) - 9, 0) * 9 + 25,
-                postCount: post_count,
-                profile
-            })
-        });
+        // this.fetchAccount(username).then(({name, post_count, reputation, json_metadata}) => {
+        //     const { profile } = JSON.parse(json_metadata);
+        //     const log = Math.log(parseInt(reputation.substring(0, 4))) / Math.log(10);
+        //     this.setState({
+        //         name,
+        //         reputation: Math.max(((reputation.length - 1) + (log - parseInt(log))) - 9, 0) * 9 + 25,
+        //         postCount: post_count,
+        //         profile
+        //     })
+        // });
 
-        this.fetchFollowCount(username).then(({following_count, follower_count}) => {
-            this.setState({
-                followingCount: following_count,
-                followerCount: follower_count
-            })
-        });
+        // this.fetchFollowCount(username).then(({following_count, follower_count}) => {
+        //     this.setState({
+        //         followingCount: following_count,
+        //         followerCount: follower_count
+        //     })
+        // });
     }
 
     render() {

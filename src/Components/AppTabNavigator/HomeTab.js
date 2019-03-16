@@ -106,7 +106,7 @@ class HomeTab extends Component {
             androidStatusBarColor="white">
             <Left><Icon name='ios-camera' style={{ paddingLeft:10 }}/></Left>
             <Body>
-              <Title style={styles.title}>Instagram</Title>
+              <Title style={styles.title}>Insteemgram</Title>
             </Body>
             <Right><Icon name='ios-send' style={{ paddingRight:10 }}/></Right>
           </Header>
