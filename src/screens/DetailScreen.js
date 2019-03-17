@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import { 
   Container, 
   Content, 
@@ -14,32 +14,45 @@ import {
 	Spinner ,
 	Text
 } from 'native-base';
+import styled from 'styled-components';
+import MarkdownView from '../components/MarkdownView';
+
+const PostTitle = styled.Text`
+	color: black;
+	font-size: 28px;
+	font-family: 'Noto Serif KR Bold';
+	font-weight: bold;
+`;
 
 export default (props) => {
 	// console.log(props);
 
 	const { content }= props.navigation.state.params;
-	console.log(content);
+	// console.log(content);
 
 	return (
 		<Container style={styles.container}>    
 			<Header
-        style={{backgroundColor:'white'}}
+				style={{backgroundColor:'white'}}
+				iosBarStyle="light-content"
         androidStatusBarColor="white">
+				<StatusBar 
+          backgroundColor="white" 
+          barStyle="dark-content"/>
         <Left>
 					<Button transparent
 						onPress={() => props.navigation.goBack()}>
-						<Icon name="arrow-back" />
+						<Icon name="arrow-back" style={{ color: "black" }}/>
 					</Button>
 				</Left>
         <Body>
-          <Title>Details</Title>
+          <Title style={{ color: "black" }}>Details</Title>
         </Body>
         <Right />
       </Header>
-			<Content>
-				<Title>{content.title}</Title>
-				<Text>{content.body}</Text>
+			<Content padder>
+				<PostTitle>{content.title}</PostTitle>
+				<MarkdownView>{content.body}</MarkdownView>
 			</Content>
 		</Container>
 	)
@@ -49,5 +62,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
-  },
+	},
 });

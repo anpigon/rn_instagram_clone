@@ -22,6 +22,9 @@ class HomeTabContainer extends Component {
       feeds: [],
       followings: []
     };
+
+    // TEST
+    // this.props.navigation.navigate('Details', { content: require('../../DUMMY').dummy[1] });
   }
 
   // 피드 가져오기

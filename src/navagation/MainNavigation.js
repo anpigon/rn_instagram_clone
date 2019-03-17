@@ -7,7 +7,7 @@ import {
 
 // import MainScreen from '../components/MainScreen';
 import TabNavigation from '../navagation/TabNavigation';
-import LoginScreen from '../components/LoginScreen';
+import LoginScreen from '../screens/LoginScreen';
 import AuthLoadingScreen from '../components/AuthLoadingScreen';
 
 import DetailScreen from '../screens/DetailScreen';

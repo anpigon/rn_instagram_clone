@@ -40,7 +40,9 @@ export default class RootApp extends Component {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      Sweet_Sensations_Persona_Use: require('./assets/Sweet_Sensations_Persona_Use.ttf')
+      Sweet_Sensations_Persona_Use: require('./assets/Sweet_Sensations_Persona_Use.ttf'),
+      'Noto Serif KR': require('./assets/NotoSerifCJKkr-Regular-subset.otf'),
+      'Noto Serif KR Bold': require('./assets/NotoSerifCJKkr-Bold-subset.otf'),
     });
 
 		// Images Preloading
@@ -55,7 +57,9 @@ export default class RootApp extends Component {
     const { loaded } = this.state;
     return (
       <>
-        <StatusBar barStyle="dark-content"/>
+        <StatusBar 
+          backgroundColor="white" 
+          barStyle="dark-content"/>
         {
           (loaded)
           ?

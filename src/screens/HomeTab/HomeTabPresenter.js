@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import { 
   Container, 
   Content, 
@@ -32,6 +32,9 @@ function HomeTabPresenter(props) {
       <Header 
         style={{backgroundColor:'white'}}
         androidStatusBarColor="white">
+        <StatusBar 
+          backgroundColor="white" 
+          barStyle="dark-content"/>
         <Left><Icon name='ios-camera' style={{ paddingLeft:10 }}/></Left>
         <Body>
           <Title style={styles.title}>Insteemgram</Title>

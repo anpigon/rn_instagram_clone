@@ -20,6 +20,7 @@ class AuthLoadingScreen extends React.Component {
   }
 
   async componentWillMount() {
+    
     const userToken = await SecureStore.getItemAsync('userToken', { keychainService: Constants.deviceId });
     // console.log('userToken:', userToken);
 

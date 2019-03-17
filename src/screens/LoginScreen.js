@@ -10,7 +10,8 @@ import { Icon, Container, Button, Text, Input } from 'native-base';
 import styled from 'styled-components';
 
 import { Constants, SecureStore } from 'expo';
-import SteemConnectModal from './SteemConnectModal';
+import SteemConnectModal from '../components/SteemConnectModal';
+import { setUsername } from '../reducers/steemReducer';
 // import steemConnect from '../steemConnect';
 
 const LogoText = styled.Text`
@@ -121,7 +122,10 @@ const mapStateToProps = (state) => {
   const { username } = state.steem;
   return { username }
 };
-
+const mapDispatchToProps = { 
+  setUsername 
+};
 export default connect(
-  mapStateToProps,
+	mapStateToProps,
+	mapDispatchToProps,
 )(LoginScreen);
