@@ -22,3 +22,5 @@
 실제 구현한 앱의 동작 화면입니다.
 
 ![](https://cdn.steemitimages.com/DQmNdRKUTLPzkJzEsddqkDF7tWhuZefHP6qS2PKpbL78W46/2019-01-25%2000-21-27.2019-01-25%2000_23_38.gif)
+
+Download APK: https://exp-shell-app-assets.s3.us-west-1.amazonaws.com/android/%40markan/insteemgram-9899aac90fc84566883eadf494772601-signed.apk
