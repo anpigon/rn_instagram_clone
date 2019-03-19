@@ -15,7 +15,7 @@ import { setUsername } from '../reducers/steemReducer';
 // import steemConnect from '../steemConnect';
 
 const LogoText = styled.Text`
-	font-family: 'Sweet_Sensations_Persona_Use';
+	font-family: 'Sweet Sensations Persona Use';
 	font-size: 60;
 	margin-bottom: 50;
 	color: #242424;

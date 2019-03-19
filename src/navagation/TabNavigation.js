@@ -5,10 +5,10 @@ import { createMaterialTopTabNavigator, createBottomTabNavigator, createAppConta
 
 // import HomeTab from '../components/AppTabNavigator/HomeTab';
 import HomeTab from '../screens/HomeTab';
-import SearchTab from '../components/AppTabNavigator/SearchTab';
-import AddMediaTab from '../components/AppTabNavigator/AddMediaTab';
-import LikesTab from '../components/AppTabNavigator/LikesTab';
-import ProfileTab from '../components/AppTabNavigator/ProfileTab';
+import SearchTab from '../screens/SearchTab';
+import AddMediaTab from '../screens/AddMediaTab';
+import LikesTab from '../screens/LikesTab';
+import ProfileTab from '../screens/ProfileTab';
 
 // const TabNavigation = createMaterialTopTabNavigator({
 const TabNavigation = createBottomTabNavigator({

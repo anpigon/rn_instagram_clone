@@ -1,168 +1,106 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { Linking, Text, TouchableOpacity } from 'react-native';
+import styled from "styled-components";
+import Layout from '../constants/Layout';
 import { Icon } from 'native-base';
-import styled from 'styled-components';
-import Markdown, {
-	getUniqueID, 
-	MarkdownIt,
-	// renderRules,
-	PluginContainer
-} from 'react-native-markdown-renderer';
 
-// https://github.com/markdown-it/markdown-it
-const md = new MarkdownIt({
-	typographer: true,
-	linkify: true,
-	// html: true,
-	// xhtmlOut: true,
+// https://github.com/archriss/react-native-render-html
+import HTMLView from 'react-native-render-html';
+
+import Remarkable from 'remarkable';
+// import console = require('console');
+const md = new Remarkable({ 
+  html: true, 
+  linkify: true, 
+  breaks: false 
 });
 
-md.linkify.tlds('.py', false);  // disables .py as top level domain
-        // Reload with full tlds list
-md.linkify.tlds('onion', true)            // Add unofficial `.onion` domain
-md.linkify.add('git:', 'http:')           // Add `git:` protocol as "alias"
-md.linkify.add('ftp:', null)              // Disable `ftp:` ptotocol
-md.linkify.set({ fuzzyIP: true });        // Enable IPs in fuzzy links (without schema)
-md.linkify.add('@', {
-	validate: function (text, pos, self) {
-		var tail = text.slice(pos);
+const BASE_FONT_SIZE = 18;
+const BASE_FONT_FAMILY = 'Noto Serif KR';
 
-		if (!self.re.twitter) {
-			self.re.twitter =  new RegExp(
-				'^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
-			);
-		}
-		if (self.re.twitter.test(tail)) {
-			// Linkifier allows punctuation chars before prefix,
-			// but we additionally disable `@` ("@@mention" is invalid)
-			if (pos >= 2 && tail[pos - 2] === '@') {
-				return false;
-			}
-			return tail.match(self.re.twitter)[0].length;
-		}
-		return 0;
-	},
-	normalize: function (match) {
-		match.url = 'https://steemit.com/' + match.url.replace(/^@/, '');
-	}
-});
-
-// renderRules['html_block'] = (node, children, parent, styles) => {
-// 	console.log('html_block', {
-// 		node, children, parent, styles
-// 	})
-// 	return (
-// 		<Text key={node.key} style={styles.text}>
-// 			{node.content}
-// 		</Text>
-// 	);
-// };
-// renderRules['html_inline'] = (node, children, parent, styles) => {
-// 	return <Text key={node.key}>{children}</Text>;
-// };
-
-const renderRules = {
-	link: (node, children, parent, styles) => {
-		return (
-			<Text key={node.key} style={styles.link} onPress={() => openUrl(node.attributes.href)}>
-				{children} <Icon name='external-link' type='Feather' style={{color:'#2088ff', fontSize:18 }}/>
-			</Text>
-		);
-	},
+const baseFontStyle = {
+  fontFamily: BASE_FONT_FAMILY,
+  fontSize: BASE_FONT_SIZE 
 }
 
-const plugin = new PluginContainer(
-	(md, name, options) => {
-		console.log('plugin', {md, name, options})
-		const parse = state => {
-			console.log('parse', state)
-			const Token = state.Token;
-
-			for (let i = 0; i < state.tokens.length; i++) {
-				const block = state.tokens[i];
-				if (block.type !== 'inline') {
-					continue;
-				}
-
-				for (let j = 0; j < block.children.length; j++) {
-					const token = block.children[j];
-					if (token.type !== 'text') {
-						continue;
-					}
-					// if (token.content === name) {
-					// 	const newToken = new Token(name, '', token.nesting);
-					// 	newToken.content = token.content;
-					// 	block.children = md.utils.arrayReplaceAt(block.children, j, [newToken]);
-					// }
-					// if (/<\/?center>/.test(token.content)) {
-					// 	const newToken = new Token('text', '', token.nesting);
-					// 	// newToken.content = token.content;
-					// 	block.children = md.utils.arrayReplaceAt(block.children, j, [newToken]);
-					// }
-					// if (/<br\/?>/.test(token.content)) {
-					// 	const newToken = new Token('text', '', token.nesting);
-					// 	// newToken.content = token.content;
-					// 	block.children = md.utils.arrayReplaceAt(block.children, j, [newToken]);
-					// }
-					// 
-				}
-			}
-		};
-
-		md.core.ruler.after('inline', name, parse);
-	},
-	'plugin',
-	{}
-);
-
-const parseHtml = (html) => {
-	return html
-		.replace(/<\/?center>/gi, '')
-		.replace(/<br\/?>/gi, '\n')
-	;
+// Tag Styles 
+const tagsStyles = { 
+  hr: { marginVertical: BASE_FONT_SIZE / 2, height: 1, backgroundColor: '#e9e7e7' },
+  a: { textDecorationLine: 'underline', color: '#2088ff' },
+  b: { fontWeight: 'bold', fontFamily: `${BASE_FONT_FAMILY} Bold` },
+  strong: { fontWeight: 'bold', fontFamily: `${BASE_FONT_FAMILY} Bold` },
+  h1: _generateHeadingStyle(BASE_FONT_SIZE, 2, 0.67),
+  h2: _generateHeadingStyle(BASE_FONT_SIZE, 1.5, 0.83),
+  h3: _generateHeadingStyle(BASE_FONT_SIZE, 1.17, 1),
+  h4: _generateHeadingStyle(BASE_FONT_SIZE, 1, 1.33),
+  h5: _generateHeadingStyle(BASE_FONT_SIZE, 1, 1, 0.2),
+  h6: _generateHeadingStyle(BASE_FONT_SIZE, 1, 1, 0.2),
+};
+function _generateHeadingStyle (baseFontSize, fontMultiplier, marginMultiplier, marginBottomMultiplier) {
+  return {
+    fontSize: baseFontSize * fontMultiplier,
+    marginTop: baseFontSize * marginMultiplier,
+    marginBottom: baseFontSize * (marginBottomMultiplier || marginMultiplier),
+    fontWeight: 'bold',
+    fontFamily: `${BASE_FONT_FAMILY} Bold`,
+  };
 }
 
-export default ({ children }) => (
-	<Markdown 
-		markdownit={md} 
-		rules={renderRules}
-		plugins={[plugin]}
-		style={styles}
-	>{parseHtml(children)}</Markdown>
-);
+// Tag Renders
+const renderers = {
+  a: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+    const style = [
+      passProps.tagsStyles ? passProps.tagsStyles['a'] : undefined,
+      htmlAttribs.style ? htmlAttribs.style : undefined,
+    ];
+    const { parentWrapper, onLinkPress, key, data, parentTag } = passProps;
+    const onPress = (evt) => onLinkPress && htmlAttribs && htmlAttribs.href ?
+        onLinkPress(evt, htmlAttribs.href, htmlAttribs) :
+        undefined;
+    if (parentWrapper === 'Text') {
+      return (
+        <Text {...passProps} style={style} onPress={onPress} key={key}>
+          { children || data } 
+          <Icon 
+            name='external-link' 
+            type='Feather' 
+            style={{ 
+              fontSize: (passProps.tagsStyles['a'] || passProps.tagsStyles[parentTag]).fontSize * 0.8, 
+              color: '#2088ff', 
+              marginLeft: 4,
+            }}/>
+        </Text>
+      );
+    } else {
+      return (
+        <TouchableOpacity onPress={onPress} key={key}>
+            { children || data }
+        </TouchableOpacity>
+      );
+    }
+  }
+}
 
-// https://github.com/mientjan/react-native-markdown-renderer/blob/master/src/lib/styles.js
-const styles = StyleSheet.create({
-	heading: {
-		borderBottomWidth: 1,
-		borderColor: '#000000',
-	},
-	heading1: {
-		fontSize: 32,
-		backgroundColor: '#000000',
-		color: '#FFFFFF',
-	},
-	heading2: {
-		fontSize: 24,
-	},
-	heading3: {
-		fontSize: 18,
-	},
-	heading4: {
-		fontSize: 16,
-	},
-	heading5: {
-		fontSize: 13,
-	},
-	heading6: {
-		fontSize: 11,
-	},
-	link: {
-		color: '#2088ff',
-    textDecorationLine: 'underline',
-	},
-	text: {
-		fontFamily: 'Noto Serif KR',
-		fontSize: 18,
-	}
-});
+// [Event] onLinkPress
+const onLinkPress = (evt, href) => { Linking.openURL(href); }
+
+// MarkdownView Component
+const MarkdownView = ({ children }) => {
+
+  let htmlContent = md.render(children);
+
+  return (
+    <HTMLView
+      html={htmlContent}
+      textSelectable={true}
+      imagesMaxWidth={Layout.width - 20}
+      onLinkPress={onLinkPress}
+      baseFontStyle={baseFontStyle}
+      tagsStyles={tagsStyles}
+      renderers={renderers}
+    />
+  );
+
+}
+
+export default MarkdownView;

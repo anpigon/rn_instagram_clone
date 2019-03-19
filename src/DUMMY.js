@@ -1,5 +1,9 @@
 export const dummy = {
 	1: {
+		title: '사기카드 Gold Dragon 으로 JJM 토큰 삽니다.',
+		body:"![K-016.png](https://s3.ap-northeast-2.amazonaws.com/dclick/image/bji1203/1552963828394)\n\n사기카드 Gold Dragon 3장 팝니다 ㅋㅋ\n<sup>2장은 올려놨는데 긴시간동안 안팔리네요.</sup>\n얼마에 올려놨는지도 까먹음ㅋㅋㅋ\n\n![K-017.png](https://s3.ap-northeast-2.amazonaws.com/dclick/image/bji1203/1552963898576)\n\n1렙(1장)은 좀 애매하지만 \n2렙(3장)부터는 자력 힐 능력이 있어서 정말 좋은 카드죠.\n3렙이 되면 Blast 스킬을 배우기때문에 정말 짱짱맨입니다.\n\n이러한 능력을 가진 골드 드래곤으로\nJJM 토큰 삽니다 ㅋㅋ\n가격 제시 부탁! \n\n근데 그 스팀 토큰들 \n보유하거나 거래하려면 어떻게 해야하나요..? ㅋㅋㅋ\n귀차니즘때문에 관심을 못가졌네요 ㅠㅠ\n\n\n\n---\n\n#####  <sub> **Sponsored ( Powered by [dclick](https://www.dclick.io) )** </sub>\n##### [헌트 토큰 IEO 및 상장계획이 드디어 확정되었습니다!](https://api.dclick.io/v1/c?x=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjIjoiYmppMTIwMyIsInMiOiItZ29sZC1kcmFnb24tamptLS0xNTUyOTY0MDY0MjQ2IiwiYSI6WyJ0LTE1MDAiXSwidXJsIjoiaHR0cHM6Ly9zdGVlbWl0LmNvbS9rci9AcHJvamVjdDcvaWVvLTEwIiwiaWF0IjoxNTUyOTY0MDY0LCJleHAiOjE4NjgzMjQwNjR9.ZLbyydvnS2NK7E83vrTa1-OyENAsIDmnrdTpVU5RWIk)\n<sup>사전 등록 스팀 유저 10% 추가 보너스 이벤트!!</sup>\n",
+	},
+	2: {
 		title: '스팀잇에 불어오는 새바람',
 		body:`<center>![](https://cdn.steemitimages.com/DQmbzvm8un6rauqPh1TCk9nvdLks441KxCuLsnra5Qj2e1s/image.png)</center>
 

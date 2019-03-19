@@ -17,6 +17,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-config": "^0.11.7",
     "react-native-markdown-renderer": "^3.2.8",
+    "react-native-render-html": "^4.1.2",
     "react-navigation": "^3.0.9",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",

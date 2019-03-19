@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontFamily: 'Sweet_Sensations_Persona_Use', 
+    fontFamily: 'Sweet Sensations Persona Use', 
     fontSize: 30,
     color: '#242424',
   }
