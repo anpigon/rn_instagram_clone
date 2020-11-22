@@ -11,11 +11,11 @@
 
 강의 동영상을 보면서 정리한 블로그입니다.
 
-* [[React Native] 인스타그램 UI 만들기 #1](https://busy.org/@anpigon/react-native-ui-1)
-* [[React Native] 인스타그램 UI 만들기 #2](https://busy.org/@anpigon/react-native-ui-2-1548079722841)
-* [[React Native] 인스타그램 UI 만들기 #3](https://busy.org/@anpigon/react-native-ui-3-1548134597178)
-* [[React Native] 인스타그램 UI 만들기 #4](https://busy.org/@anpigon/react-native-ui-4-1548207724086)
-* [[React Native] 인스타그램 UI 만들기 #5](https://busy.org/@anpigon/react-native-ui-5-1548346515419)
+* [[React Native] 인스타그램 UI 만들기 #1](https://steemit.com/kr/@anpigon/react-native-ui-1)
+* [[React Native] 인스타그램 UI 만들기 #2](https://steemit.com/kr/@anpigon/react-native-ui-2-1548079722841)
+* [[React Native] 인스타그램 UI 만들기 #3](https://steemit.com/kr/@anpigon/react-native-ui-3-1548134597178)
+* [[React Native] 인스타그램 UI 만들기 #4](https://steemit.com/kr/@anpigon/react-native-ui-4-1548207724086)
+* [[React Native] 인스타그램 UI 만들기 #5](https://steemit.com/kr/@anpigon/react-native-ui-5-1548346515419)
 
 ---
 
